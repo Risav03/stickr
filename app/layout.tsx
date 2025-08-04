@@ -1,15 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Montserrat, Poppins } from "next/font/google";
 import "./globals.css";
+import Rainbow from "@/utils/Providers/rainbow";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+import localFont from "next/font/local";
+import Background from "@/components/UI/Background";
+import Navbar from "@/components/UI/Navbar";
+
+const geistSans = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const geistMono = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -25,9 +31,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.className} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <Rainbow>
+          <Background/>
+          <Navbar/>
+          {children}
+        </Rainbow>
+    
       </body>
     </html>
   );

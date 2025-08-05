@@ -1,0 +1,53 @@
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { Errors, createClient } from '@farcaster/quick-auth'
+
+
+const client = createClient()
+// This middleware runs on every request
+export async function middleware(request: NextRequest) {
+  // Example: Check if the user is authenticated
+ const authorization = request.headers.get('Authorization');
+
+  if (!authorization) {
+    // Redirect to the login page if not authenticated
+    return NextResponse.json({status: 401, statusText: 'Unauthorized'});
+  }
+
+  const payload = await client.verifyJwt({
+      token: authorization.split(' ')[1] as string,
+      domain: process.env.HOSTNAME as string,
+    })
+
+    const user = await resolveUser(payload.sub)
+
+    if(!user){
+        return NextResponse.json({status: 401, statusText: 'Unauthorized'});
+    }
+
+  // Allow the request to proceed
+  return NextResponse.next();
+}
+
+// Define the paths where the middleware should run
+export const config = {
+  matcher: ["/api/protected/:path*"],
+};
+
+async function resolveUser(fid: number) {
+  const primaryAddress = await (async () => {
+    const res = await fetch(
+      `https://api.farcaster.xyz/fc/primary-address?fid=${fid}&protocol=ethereum`,
+    )
+    if (res.ok) {
+      const { result } = await res.json()
+ 
+      return result.address.address
+    }
+  })()
+ 
+  return {
+    fid,
+    primaryAddress,
+  }
+}

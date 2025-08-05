@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Montserrat, Poppins } from "next/font/google";
+import { Montserrat, Poppins } from "next/font/google";
 import "./globals.css";
-import Rainbow from "@/utils/Providers/rainbow";
-
-import localFont from "next/font/local";
 import Background from "@/components/UI/Background";
 import Navbar from "@/components/UI/Navbar";
+import Providers from "@/utils/Providers/farcasterReady";
 
 const geistSans = Montserrat({
   variable: "--font-montserrat",
@@ -33,12 +31,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.className} ${geistMono.variable} antialiased`}
       >
-        <Rainbow>
+        <Providers>
           <Background/>
           <Navbar/>
           {children}
-        </Rainbow>
-    
+        </Providers>
+
       </body>
     </html>
   );

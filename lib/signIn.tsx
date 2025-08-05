@@ -17,23 +17,31 @@ export function SignInAction() {
 
 
   const getNonce = useCallback(async (): Promise<string> => {
-    // const nonce = await getCsrfToken();
-    const nonce = await generateNonce();
-    if (!nonce) throw new Error("Unable to generate nonce");
-    return nonce;
+    console.log("getNonce called");
+    try {
+      const nonce = await generateNonce();
+      if (!nonce) throw new Error("Unable to generate nonce");
+      console.log("Nonce generated:", nonce);
+      return nonce;
+    } catch (error) {
+      console.error("Error in getNonce:", error);
+      throw error;
+    }
   }, []);
 
   const handleSignIn = useCallback(async (): Promise<void> => {
+    console.log("handleSignIn called");
     try {
       setSigningIn(true);
       setSignInFailure(undefined);
       setVerifyResponse(undefined);
       setVerifyParams(undefined);
       const nonce = await getNonce();
+      console.log("Nonce for signIn:", nonce);
       const result = await sdk.actions.signIn({ nonce });
+      console.log("SignIn result:", result);
       setSignInResult(result);
 
-      // Verify the sign-in message
       const appClient = createAppClient({
         ethereum: viemConnector(),
       });
@@ -45,13 +53,12 @@ export function SignInAction() {
         nonce: nonce,
         acceptAuthAddress: true
       };
-      
-      // Store params for debugging
+      console.log("Verify request params:", verifyRequestParams);
       setVerifyParams(verifyRequestParams);
 
       const verifyResult = await appClient.verifySignInMessage(verifyRequestParams);
+      console.log("Verify result:", verifyResult);
       setVerifyResponse(verifyResult);
-
 
     } catch (error) {
       console.error("Sign in error:", error);
@@ -123,4 +130,4 @@ export function SignInAction() {
       )}
     </div>
   );
-} 
+}

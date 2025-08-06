@@ -7,6 +7,7 @@ const client = createClient()
 // This middleware runs on every request
 export async function middleware(request: NextRequest) {
   // Example: Check if the user is authenticated
+  console.log('Middleware running for request:', request.headers);
  const authorization = request.headers.get('Authorization');
 
   if (!authorization) {
@@ -18,6 +19,8 @@ export async function middleware(request: NextRequest) {
       token: authorization.split(' ')[1] as string,
       domain: process.env.HOSTNAME as string,
     })
+
+    console.log('Payload:', payload);
 
     const user = await resolveUser(payload.sub)
 

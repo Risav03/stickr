@@ -10,7 +10,7 @@ const TestApiResponses = () => {
     const [publicResponse, setPublicResponse] = useState<ApiResponse | null>(null);
 
     const fetchProtectedApi = () => {
-        fetch('/api/(protected)/test')
+        fetch('/api/protected/testp')
             .then((res) => res.json())
             .then((data) => setProtectedResponse(data))
             .catch((err) => setProtectedResponse({ error: err.message }));

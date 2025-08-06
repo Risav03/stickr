@@ -16,11 +16,12 @@ export const GlobalContextProvider = ({ children }: { children: ReactNode }) => 
   const [user, setUser] = useState<string | null>(null);
 
   useEffect(() => {
+    sdk.actions.ready();
     (async () => {
       const res = await sdk.quickAuth.fetch(`/api/getUser`);
       if (res.ok) {
         setUser(await res.json());
-        sdk.actions.ready();
+        
       }
     })();
   }, []);

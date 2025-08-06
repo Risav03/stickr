@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { sdk } from "@farcaster/miniapp-sdk";
 
 type ApiResponse = {
     message?: string;
@@ -10,7 +11,7 @@ const TestApiResponses = () => {
     const [publicResponse, setPublicResponse] = useState<ApiResponse | null>(null);
 
     const fetchProtectedApi = () => {
-        fetch('/api/protected/testp')
+        sdk.quickAuth.fetch('/api/protected/testp')
             .then((res) => res.json())
             .then((data) => setProtectedResponse(data))
             .catch((err) => setProtectedResponse({ error: err.message }));

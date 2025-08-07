@@ -38,12 +38,16 @@ export const config = {
 async function resolveUser(fid: number) {
   const primaryAddress = await (async () => {
     const res = await fetch(
-      `https://api.farcaster.xyz/fc/primary-address?fid=${fid}&protocol=ethereum`,
+      `https://api.neynar.com/v2/farcaster/user/bulk?fids=${fid}`, {
+        headers:{
+          "x-api-key": process.env.NEYNAR_API_KEY as string,
+        }
+      }
     )
     if (res.ok) {
       const { result } = await res.json()
-      console.log("This is the response form the primary address API", result)
-      return result.address.address
+      console.log("This is the response form the primary address API", result.users?.[0])
+      return result.users?.[0]
     }
   })()
  

@@ -37,6 +37,7 @@ export const config = {
 
 async function resolveUser(fid: number) {
   const primaryAddress = await (async () => {
+    console.log("This is the fid: ", fid, process.env.NEYNAR_API_KEY)
     const res = await fetch(
       `https://api.neynar.com/v2/farcaster/user/bulk?fids=${fid}`, {
         headers:{

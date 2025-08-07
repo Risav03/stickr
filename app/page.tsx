@@ -13,13 +13,13 @@ export default function Home() {
       {JSON.stringify(user) !== '{}' && (
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
           <Image
-            src={user.pfp_url}
-            alt={`${user.username} profile`}
+            src={user?.pfp_url}
+            alt={`${user?.username} profile`}
             className="rounded-full w-20 aspect-square"
             width={80}
             height={80}
           />
-          <span className="text-lg mt-2">{user.username}</span>
+          <span className="text-lg mt-2">{user?.username}</span>
         </div>
       )}
       <h2>{JSON.stringify(user)}</h2>

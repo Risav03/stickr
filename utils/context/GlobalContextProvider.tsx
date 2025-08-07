@@ -42,15 +42,11 @@ export const GlobalContextProvider = ({ children }: { children: ReactNode }) => 
 
         await sdk.actions.signIn({ nonce });
 
-        const stuff = sessionStorage.getItem("userInfo");
-
-        if (!stuff) {
           const res = await sdk.quickAuth.fetch("/api/me");
           const jsonResponse = await res.json();
           if (res) {
             setUser(jsonResponse.user);
           }
-        }
   
       } catch (error) {
         console.error("Sign in error:", error);

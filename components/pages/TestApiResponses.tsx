@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { sdk } from "@farcaster/miniapp-sdk";
+import { fetchWrapper } from '@/lib/fetchWrapper';
 
 type ApiResponse = {
     message?: string;
@@ -7,12 +8,11 @@ type ApiResponse = {
 };
 
 const TestApiResponses = () => {
-    const [protectedResponse, setProtectedResponse] = useState<ApiResponse | null>(null);
-    const [publicResponse, setPublicResponse] = useState<ApiResponse | null>(null);
+    const [protectedResponse, setProtectedResponse] = useState<any>(null);
+    const [publicResponse, setPublicResponse] = useState<any>(null);
 
     const fetchProtectedApi = () => {
-        sdk.quickAuth.fetch('/api/protected/testp')
-            .then((res) => res.json())
+        fetchWrapper('/api/protected/testp')
             .then((data) => setProtectedResponse(data))
             .catch((err) => setProtectedResponse({ error: err.message }));
     };

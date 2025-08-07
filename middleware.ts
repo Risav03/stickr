@@ -20,8 +20,6 @@ export async function middleware(request: NextRequest) {
       domain: process.env.HOSTNAME as string,
     })
 
-    console.log('Payload:', payload);
-
     const user = await resolveUser(payload.sub)
 
     if(!user){
@@ -44,7 +42,7 @@ async function resolveUser(fid: number) {
     )
     if (res.ok) {
       const { result } = await res.json()
- 
+      console.log("This is the response form the primary address API", result)
       return result.address.address
     }
   })()

@@ -36,28 +36,21 @@ export const GlobalContextProvider = ({ children }: { children: ReactNode }) => 
     }, []);
   
     const handleSignIn = useCallback(async (): Promise<void> => {
-      console.log("handleSignIn called");
       try {
 
         const nonce = await getNonce();
 
-        const result = await sdk.actions.signIn({ nonce });
-  
-        const appClient = createAppClient({
-          ethereum: viemConnector(),
-        });
-  
-        const verifyRequestParams = {
-          message: result.message,
-          signature: result.signature as `0x${string}`,
-          domain: new URL(window.location.origin).hostname,
-          nonce: nonce,
-          acceptAuthAddress: true
-        };
-        console.log("Verify request params:", verifyRequestParams);
-  
-        const verifyResult = await appClient.verifySignInMessage(verifyRequestParams);
-        console.log("Verify result:", verifyResult);
+        await sdk.actions.signIn({ nonce });
+
+        const stuff = sessionStorage.getItem("userInfo");
+
+        if (!stuff) {
+          const res = await sdk.quickAuth.fetch("/api/me");
+          const jsonResponse = await res.json();
+          if (res) {
+            sessionStorage.setItem("userInfo", JSON.stringify(jsonResponse.user));
+          }
+        }
   
       } catch (error) {
         console.error("Sign in error:", error);

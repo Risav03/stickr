@@ -1,41 +1,35 @@
-'use client'
-import Image from 'next/image';
-import React, { useState, useEffect } from 'react';
-
-type Data = {
-  user: {
-    username: string;
-    pfp_url: string;
-  };
-};
+"use client";
+import Image from "next/image";
+import React, { useState, useEffect } from "react";
 
 const ProfileImgHolder: React.FC = () => {
-  const [data, setData] = useState<Data | null>(null);
+  const [userInfo, setUserInfo] = useState<{ user: { username: string; pfp_url: string } } | null>(null);
 
   useEffect(() => {
-    const stored = sessionStorage?.getItem('userInfo');
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        setData(parsed);
-      } catch (e) {
-        console.error('Failed to parse userInfo from sessionStorage', e);
+    if (typeof window !== "undefined") {
+      const stored = sessionStorage.getItem("userInfo");
+      if (stored) {
+        try {
+          setUserInfo(JSON.parse(stored));
+        } catch (e) {
+          console.error("Failed to parse userInfo from sessionStorage", e);
+        }
       }
     }
-  }, [sessionStorage]);
+  }, []);
 
-  if (!data?.user) {
+  if (!userInfo?.user) {
     return null;
   }
 
   return (
     <div className="flex-col gap-2 items-center justify-center">
       <Image
-        src={data.user.pfp_url}
-        alt={`${data.user.username} profile`}
+        src={userInfo.user.pfp_url}
+        alt={`${userInfo.user.username} profile`}
         className="rounded-full w-10 aspect-square"
       />
-      <span>{data.user.username}</span>
+      <span>{userInfo.user.username}</span>
     </div>
   );
 };

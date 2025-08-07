@@ -1,10 +1,19 @@
+'use client'
+import { CiSquarePlus } from "react-icons/ci";
 import { TiPlus } from "react-icons/ti";
+import ProfileImgHolder from "./ProfileImgHolder";
 
 export default function Navbar(){
     return (
-        <div className="fixed bottom-0 w-screen h-12 rounded-t-xl flex items-center justify-center border-t-[1px] border-white/40 bg-(--subheading)/10 backdrop-blur-md z-50">
-            <button className="bg-white text-blue-950 -translate-y-6 rounded-full w-12 aspect-square text-3xl font-bold">
-                <TiPlus className="mx-auto"/>
+        <div className="fixed bottom-0 w-screen h-16 rounded-t-xl flex items-center justify-center border-t-[1px] border-white bg-(--subheading)/10 backdrop-blur-md z-50">
+            <button className="w-1/3">
+                Yes
+            </button>
+            <button className="w-1/3 text-white rounded-full aspect-square text-3xl font-bold">
+                <CiSquarePlus className="mx-auto text-4xl"/>
+            </button>
+            <button className="w-1/3">
+                <ProfileImgHolder/>
             </button>
         </div>
     )

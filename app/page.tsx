@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex-col items-center justify-center relative py-6 text-white px-4">
+    <div className="min-h-[100dvh] flex-col items-center justify-center relative py-6 text-white px-4">
       <Landing/>
     </div>
   );

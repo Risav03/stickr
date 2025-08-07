@@ -7,30 +7,31 @@ const ProfileImgHolder: React.FC = () => {
     user: { username: string; pfp_url: string };
   } | null>(null);
 
-  useEffect(() => {
+  const fetchUserInfo = () => {
     if (typeof window !== "undefined") {
-      const timeout = setTimeout(() => {
-        const stored = sessionStorage.getItem("userInfo");
-        if (stored) {
-          try {
-            setUserInfo(JSON.parse(stored));
-          } catch (e) {
-            console.error("Failed to parse userInfo from sessionStorage", e);
-          }
+      const stored = sessionStorage.getItem("userInfo");
+      if (stored) {
+        try {
+          setUserInfo(JSON.parse(stored));
+        } catch (e) {
+          console.error("Failed to parse userInfo from sessionStorage", e);
         }
-      }, 2000); // 2000ms delay, adjust as needed
-      return () => clearTimeout(timeout);
+      }
     }
+  };
+
+  useEffect(() => {
+    fetchUserInfo();
   }, []);
 
   if (!userInfo?.user) {
     return (
-      <div className="flex-col gap-2 items-center justify-center">
+      <button className="flex-col gap-2 items-center justify-center" onClick={fetchUserInfo}>
         <div
           className="rounded-full w-10 aspect-square bg-white/10 animate-pulse" // Placeholder style
         />
         <span className="w-10 h-2 rounded-full bg-white/10 animate-pulse"></span>
-      </div>
+      </button>
     );
   }
 

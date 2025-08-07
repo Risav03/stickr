@@ -4,8 +4,8 @@ import { createAppClient, generateNonce, viemConnector } from "@farcaster/auth-c
 
 // Define the shape of the context data
 interface GlobalContextProps {
-  user: string | null;
-  setUser: (user: string | null) => void;
+  user: any | null;
+  setUser: (user: any | null) => void;
 }
 
 // Create the context
@@ -13,7 +13,7 @@ const GlobalContext = createContext<GlobalContextProps | undefined>(undefined);
 
 // Create the provider component
 export const GlobalContextProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<any | null>(null);
 
   useEffect(() => {
     sdk.actions.ready();
@@ -48,7 +48,7 @@ export const GlobalContextProvider = ({ children }: { children: ReactNode }) => 
           const res = await sdk.quickAuth.fetch("/api/me");
           const jsonResponse = await res.json();
           if (res) {
-            sessionStorage.setItem("userInfo", JSON.stringify(jsonResponse.user));
+            setUser(jsonResponse.user);
           }
         }
   

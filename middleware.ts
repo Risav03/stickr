@@ -47,9 +47,9 @@ async function resolveUser(fid: number) {
     )
     console.log("This is the raw response: ", res)
     if (res.ok) {
-      const { result } = await res.json()
-      console.log("This is the json response: ", result)
-      return result.users?.[0]
+      const jsonRes = await res.json()
+      console.log("This is the json response: ", jsonRes)
+      return jsonRes.users?.[0]
     }
   })()
  

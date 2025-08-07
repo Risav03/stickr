@@ -44,9 +44,10 @@ async function resolveUser(fid: number) {
         }
       }
     )
+    console.log("This is the raw response: ", res)
     if (res.ok) {
       const { result } = await res.json()
-      console.log("This is the response form the primary address API", result)
+      console.log("This is the json response: ", result)
       return result.users?.[0]
     }
   })()

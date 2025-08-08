@@ -1,11 +1,11 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from "react";
 import { sdk } from "@farcaster/miniapp-sdk";
+import { createAppClient, generateNonce, viemConnector } from "@farcaster/auth-client";
 
 // Define the shape of the context data
 interface GlobalContextProps {
-  user: string | null;
-  setUser: (user: string | null) => void;
-  signIn: () => Promise<void>;
+  user: any | null;
+  setUser: (user: any | null) => void;
 }
 
 // Create the context
@@ -13,50 +13,48 @@ const GlobalContext = createContext<GlobalContextProps | undefined>(undefined);
 
 // Create the provider component
 export const GlobalContextProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<any | null>(null);
 
   useEffect(() => {
+    sdk.actions.ready();
     (async () => {
-      const res = await sdk.quickAuth.fetch(`/api/getUser`);
-      if (res.ok) {
-        setUser(await res.json());
-        sdk.actions.ready();
-      }
+      await handleSignIn();
     })();
   }, []);
 
-  const signIn = async () => {
-    try {
-      const nonce = Math.random().toString(36).substring(2, 10); // Generate a random nonce
-      const result = await sdk.actions.signIn({ nonce, acceptAuthAddress: true });
-
-      // Log the result for debugging purposes
-      console.log('Sign-in result:', result);
-
-      // Send the result to your server for verification
-      const response = await fetch('/api/verifySignIn', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(result),
-      });
-
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-      } else {
-        console.error('Failed to verify sign-in');
+    const getNonce = useCallback(async (): Promise<string> => {
+      console.log("getNonce called");
+      try {
+        const nonce = await generateNonce();
+        if (!nonce) throw new Error("Unable to generate nonce");
+        console.log("Nonce generated:", nonce);
+        return nonce;
+      } catch (error) {
+        console.error("Error in getNonce:", error);
+        throw error;
       }
-    } catch (error: any) {
-      if (error.name === 'RejectedByUser') {
-        console.warn('User rejected the sign-in request');
-      } else {
-        console.error('Sign-in error:', error);
+    }, []);
+  
+    const handleSignIn = useCallback(async (): Promise<void> => {
+      try {
+
+        const nonce = await getNonce();
+
+        await sdk.actions.signIn({ nonce });
+
+          const res = await sdk.quickAuth.fetch("/api/me");
+          const jsonResponse = await res.json();
+          if (res) {
+            setUser(jsonResponse.user);
+          }
+  
+      } catch (error) {
+        console.error("Sign in error:", error);
       }
-    }
-  };
+    }, [getNonce]);
 
   return (
-    <GlobalContext.Provider value={{ user, setUser, signIn }}>
+    <GlobalContext.Provider value={{ user, setUser }}>
       {children}
     </GlobalContext.Provider>
   );

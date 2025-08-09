@@ -21,6 +21,37 @@ const CreateCommunity: React.FC = () => {
     }
   };
 
+  const handleSubmit = async () => {
+    if (!title || !description || !displayImage || !bannerImage) {
+      alert('Please fill in all fields');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('displayImage', displayImage);
+    formData.append('bannerImage', bannerImage);
+
+    try {
+      const response = await fetch('/api/protected/community', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create community');
+      }
+
+      const community = await response.json();
+      // Redirect to the new community page
+      window.location.href = `/community/${community._id}`;
+    } catch (error: any) {
+      alert(error.message);
+    }
+  };
+
   return (
     <div className="p-3 pb-32">
       <h1 className="text-2xl font-bold text-white mb-4">Create Community</h1>
@@ -41,7 +72,7 @@ const CreateCommunity: React.FC = () => {
         <ImageUploader id="banner-image-upload" fieldName='Banner Image' onDrop={handleBannerImageDrop}  className="mb-4 w-full aspect-[5/2] my-auto" />
       </div>
 
-      <Button onClick={() => {}} className='w-full' >Create</Button>
+      <Button onClick={handleSubmit} className='w-full' >Create</Button>
     </div>
   );
 };

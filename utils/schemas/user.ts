@@ -4,8 +4,8 @@ export interface IUser extends Document {
   fid: string;
 }
 
-const UserSchema: Schema = new Schema({
+const User: Schema = new Schema({
   fid: { type: String, required: true, unique: true }
 });
 
-export default mongoose.model<IUser>('User', UserSchema);
+export default mongoose.models.User || mongoose.model('User', User);

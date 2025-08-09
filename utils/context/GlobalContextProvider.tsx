@@ -47,6 +47,8 @@ export const GlobalContextProvider = ({ children }: { children: ReactNode }) => 
           if (res) {
             setUser(jsonResponse.user);
           }
+
+          await sdk.quickAuth.fetch("/api/protected/createUser");
   
       } catch (error) {
         console.error("Sign in error:", error);

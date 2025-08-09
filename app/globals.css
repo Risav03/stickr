@@ -54,3 +54,11 @@ body {
   color: var(--foreground);
   font-family: var(--font-poppins), var(--font-montserrat);
 }
+
+.bg-action-button {
+  @apply bg-blue-600;
+}
+
+.hover-action-button:hover {
+  @apply bg-blue-700;
+}
